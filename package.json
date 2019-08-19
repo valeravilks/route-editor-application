@@ -13,6 +13,7 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "google-maps-react": "^2.0.2",
+    "lazy-input": "^2.0.0",
     "mobx": "^5.10.1",
     "mobx-react": "^6.1.1",
     "prop-types": "^15.7.2",
