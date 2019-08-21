@@ -1,14 +1,10 @@
 import React from "react";
 import withStore from '~/hocs/withStore';
 
-import { YMaps, Map, GeoObject, Placemark } from 'react-yandex-maps';
+import { YMaps, Map, GeoObject, Placemark, Polyline } from 'react-yandex-maps';
 import { Button } from 'react-bootstrap';
-
-const mapState = {
-    center: [55.76, 37.64],
-    zoom: 10,
-    controls: []
-};
+import { DndProvider } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 
 class App extends React.Component {
     input = React.createRef();
@@ -42,6 +38,18 @@ class App extends React.Component {
         this.props.stores.maps.pointerRemove(value)
     };
 
+    center = () => {
+        if(this.props.stores.maps.pointer.length !== 0){
+            return this.props.stores.maps.pointer[this.props.stores.maps.pointer.length - 1]['point']
+        } else {
+            return [55.751574, 37.573856]
+        }
+    }
+
+    polygon = () => {
+        return this.props.stores.maps.pointer.map(el => el['point'])
+    }
+
     render() {
         let renderPoint = this.props.stores.maps.pointer.map((point, index) => {
             return <li key={index}>
@@ -68,18 +76,33 @@ class App extends React.Component {
                                ref={this.input}
                         />
                         <ul>
-                            {renderPoint}
+                            <DndProvider backend={HTML5Backend}>
+                                {renderPoint}
+                            </DndProvider>
                         </ul>
 
                     </div>
                     <div className="col-12 h123">
                         <YMaps query={{ load: "package.full" }}>
                             <Map
-                                state={mapState}
+                                state={{
+                                    center: this.center(),
+                                    zoom: 10,
+                                    controls: []
+                                }}
                                 onLoad={this.onSaggest}
 
                             >
                                 {plaseMark}
+                                <Polyline
+                                    geometry={this.polygon()}
+                                    options={{
+                                        balloonCloseButton: false,
+                                        strokeColor: '#000',
+                                        strokeWidth: 4,
+                                        strokeOpacity: 0.5,
+                                    }}
+                                />
                             </Map>
 
                         </YMaps>
