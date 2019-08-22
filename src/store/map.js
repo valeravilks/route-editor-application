@@ -31,4 +31,6 @@ export default class{
         this.suggest = suggestObj;
     }
 
+
+
 }

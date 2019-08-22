@@ -50,6 +50,26 @@ class App extends React.Component {
         return this.props.stores.maps.pointer.map(el => el['point'])
     }
 
+    pressKey = (e) => {
+        if(e.keyCode === 13){
+            this.ymaps.suggest(this.input.current.value)
+                .then((items) => {
+                    let name = items[0].displayName;
+
+                    this.input.current.value = '';
+
+                    this.props.stores.geoCode(items[0].value).then(res => {
+                        let point = res['response']['GeoObjectCollection']['featureMember']['0']['GeoObject']['Point']['pos'];
+
+                        this.props.stores.maps.pointerPush({
+                            name: items[0].displayName,
+                            point: point
+                        });
+                    })
+                });
+        }
+    }
+
     render() {
         let renderPoint = this.props.stores.maps.pointer.map((point, index) => {
             return <li key={index}>
@@ -74,6 +94,7 @@ class App extends React.Component {
                                className="form-control"
                                id="suggest"
                                ref={this.input}
+                               onKeyUp={this.pressKey}
                         />
                         <ul>
                             <DndProvider backend={HTML5Backend}>
