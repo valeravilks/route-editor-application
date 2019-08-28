@@ -3,21 +3,18 @@ import {observable, computed, action} from 'mobx';
 export default class{
     constructor(rootStore){
         this.rootStore = rootStore;
-        this.geoDeCode = this.rootStore.api.geoDeCode;
+        this.geoDeCode = rootStore.api.geoDeCode.remote;
     }
 
     @observable pointer = [];
 
     @action pointerPush(value){
         if(!this.pointer.some(el => el['name'] === value)){
-
-            let massPoint = value['point'].split(' ');
-            let newMass = massPoint.map(el => +el);
-            newMass.reverse();
-
-            this.pointer.push({
-                name: value['name'],
-                point: newMass
+            this.geoDeCoders(value).then(res => {
+                this.pointer.push({
+                    name: value,
+                    point: res
+               });
             });
         }
     }
@@ -32,11 +29,14 @@ export default class{
         this.suggest = suggestObj;
     }
 
-    @action geoDeCode(value){
-        this.rootStore.api.geoDeCode(value).then(res => {
+    @action geoDeCoders(value){
+        return this.geoDeCode(value).then(res => {
             let point = res['response']['GeoObjectCollection']['featureMember']['0']['GeoObject']['Point']['pos'];
+            let massPoint = point.split(' ');
+            let newMass = massPoint.map(el => +el);
+            newMass.reverse();
+            return newMass;
         });
-        return {}
     }
 
 

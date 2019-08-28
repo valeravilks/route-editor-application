@@ -8,7 +8,6 @@ class RootStore{
             geoDeCode,
         };
 
-        this.number = '5';
         this.storage = localStorage;
         this.maps = new mapStore(this);
 

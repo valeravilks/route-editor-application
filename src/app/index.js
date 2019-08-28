@@ -23,14 +23,16 @@ class App extends React.Component {
 
             this.input.current.value = '';
 
-            this.props.stores.geoCode(e.get("item")["value"]).then(res => {
+            this.props.stores.maps.pointerPush(name);
+
+            /*this.props.stores.geoCode(e.get("item")["value"]).then(res => {
                 let point = res['response']['GeoObjectCollection']['featureMember']['0']['GeoObject']['Point']['pos'];
 
                 this.props.stores.maps.pointerPush({
                     name: name,
                     point: point
                 });
-            })
+            })*/
         });
     };
 
@@ -49,6 +51,10 @@ class App extends React.Component {
     polygon = () => {
         return this.props.stores.maps.pointer.map(el => el['point'])
     }
+
+    addTest = () => {
+        this.props.stores.maps.pointerPush('Великие Луки');
+    };
 
     pressKey = (e) => {
         if(e.keyCode === 13){
@@ -86,6 +92,7 @@ class App extends React.Component {
 
         return (
             <div className="container m-5">
+                <Button onClick={this.addTest}>Жму</Button>
                 <div className="row">
                     <div className="col-12">
                         <input
