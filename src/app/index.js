@@ -52,10 +52,6 @@ class App extends React.Component {
         return this.props.stores.maps.pointer.map(el => el['point'])
     }
 
-    addTest = () => {
-        this.props.stores.maps.pointerPush('Великие Луки');
-    };
-
     pressKey = (e) => {
         if(e.keyCode === 13){
             this.ymaps.suggest(this.input.current.value)
@@ -92,7 +88,6 @@ class App extends React.Component {
 
         return (
             <div className="container m-5">
-                <Button onClick={this.addTest}>Жму</Button>
                 <div className="row">
                     <div className="col-12">
                         <input
