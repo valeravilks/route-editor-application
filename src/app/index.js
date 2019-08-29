@@ -7,6 +7,7 @@ import { DndProvider } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 
 class App extends React.Component {
+
     input = React.createRef();
 
     onSaggest = ymaps => {
@@ -18,26 +19,25 @@ class App extends React.Component {
         });
 
         suggestView.events.add("select", (e) => {
-           // this.props.stores.maps.pointerPush(e.get("item")["value"]);
-            let name = e.get("item")["value"];
-
+            let name = e.get("item").displayName;
             this.input.current.value = '';
-
             this.props.stores.maps.pointerPush(name);
-
-            /*this.props.stores.geoCode(e.get("item")["value"]).then(res => {
-                let point = res['response']['GeoObjectCollection']['featureMember']['0']['GeoObject']['Point']['pos'];
-
-                this.props.stores.maps.pointerPush({
-                    name: name,
-                    point: point
-                });
-            })*/
         });
     };
 
+    pressKey = (e) => {
+        if(e.keyCode === 13){
+            this.ymaps.suggest(this.input.current.value)
+                .then((items) => {
+                    let name = items[0].displayName;
+                    this.props.stores.maps.pointerPush(name);
+                });
+            this.input.current.value = '';
+        }
+    }
+
     removeItem = (value) => {
-        this.props.stores.maps.pointerRemove(value)
+        this.props.stores.maps.pointerRemove(value);
     };
 
     center = () => {
@@ -50,26 +50,6 @@ class App extends React.Component {
 
     polygon = () => {
         return this.props.stores.maps.pointer.map(el => el['point'])
-    }
-
-    pressKey = (e) => {
-        if(e.keyCode === 13){
-            this.ymaps.suggest(this.input.current.value)
-                .then((items) => {
-                    let name = items[0].displayName;
-
-                    this.input.current.value = '';
-
-                    this.props.stores.geoCode(items[0].value).then(res => {
-                        let point = res['response']['GeoObjectCollection']['featureMember']['0']['GeoObject']['Point']['pos'];
-
-                        this.props.stores.maps.pointerPush({
-                            name: items[0].displayName,
-                            point: point
-                        });
-                    })
-                });
-        }
     }
 
     render() {
@@ -127,7 +107,6 @@ class App extends React.Component {
                                     }}
                                 />
                             </Map>
-
                         </YMaps>
                     </div>
                 </div>
