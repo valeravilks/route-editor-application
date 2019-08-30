@@ -7,7 +7,7 @@ export default class{
         this.geoDeCode = rootStore.api.geoDeCode.remote;
     }
 
-    @observable pointer = [{name: "Великие Луки", point: [10, 10]}];
+    @observable pointer = [];
 
     @action pointerPush(value){
         if(!this.pointer.some(el => el['name'] === value)){

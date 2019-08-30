@@ -31,6 +31,19 @@ let conf = {
                 }
             },
             {
+                test: /^((?!\.module).)*css$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                        }
+                    },
+                    'css-loader',
+                    'sass-loader'
+                ]
+            },
+            {
                 test: /\.module\.(scss|css)$/,
                 exclude: /node_modules/,
                 use: [
@@ -49,19 +62,6 @@ let conf = {
                             }
                         },
                     },
-                    'sass-loader'
-                ]
-            },
-            {
-                test: /^((?!\.module).)*css$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: process.env.NODE_ENV === 'development',
-                        }
-                    },
-                    'css-loader',
                     'sass-loader'
                 ]
             }

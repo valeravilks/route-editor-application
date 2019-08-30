@@ -1,13 +1,17 @@
 import withStore from '~/hocs/withStore';
 import React, {Component} from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import { ListGroup } from 'react-bootstrap';
 
-const SortableItem = SortableElement(({value}) => <ListGroup.Item>{value}</ListGroup.Item>);
+import { ListGroup, Button } from 'react-bootstrap';
+import css from './style.module.scss';
+
+const SortableItem = SortableElement(({value}) =>
+    <ListGroup.Item className={css.item}>
+        <div className={css.fg}>{value}</div>
+        <Button variant="danger">-</Button>
+    </ListGroup.Item>);
 
 const SortableList = withStore(SortableContainer(({items}) => {
-    console.log(1);
-
     return (
         <ListGroup>
             {items.map((value, index) => (
