@@ -1,10 +1,9 @@
 import React from "react";
 import withStore from '~/hocs/withStore';
+import Dnd from '~c/dnd';
 
 import { YMaps, Map, GeoObject, Placemark, Polyline } from 'react-yandex-maps';
 import { Button } from 'react-bootstrap';
-import { DndProvider } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
 
 class App extends React.Component {
 
@@ -65,9 +64,9 @@ class App extends React.Component {
         let plaseMark = this.props.stores.maps.pointer.map((point, index) => {
             return  <Placemark key={index} geometry={point['point']} />
         });
-
         return (
             <div className="container m-5">
+                <Dnd/>
                 <div className="row">
                     <div className="col-12">
                         <input
@@ -79,9 +78,7 @@ class App extends React.Component {
                                onKeyUp={this.pressKey}
                         />
                         <ul>
-                            <DndProvider backend={HTML5Backend}>
                                 {renderPoint}
-                            </DndProvider>
                         </ul>
 
                     </div>
@@ -110,6 +107,7 @@ class App extends React.Component {
                         </YMaps>
                     </div>
                 </div>
+
             </div>
         );
     }

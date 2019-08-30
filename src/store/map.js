@@ -1,4 +1,5 @@
 import {observable, computed, action} from 'mobx';
+import arrayMove from 'array-move';
 
 export default class{
     constructor(rootStore){
@@ -6,7 +7,7 @@ export default class{
         this.geoDeCode = rootStore.api.geoDeCode.remote;
     }
 
-    @observable pointer = [];
+    @observable pointer = [{name: "Великие Луки", point: [10, 10]}];
 
     @action pointerPush(value){
         if(!this.pointer.some(el => el['name'] === value)){
@@ -21,6 +22,10 @@ export default class{
 
     @action pointerRemove(value){
         this.pointer.splice(value, 1);
+    }
+
+    @action pointerSort(oldIndex, newIndex){
+        this.pointer = arrayMove(this.pointer, oldIndex, newIndex);
     }
 
     @observable suggest = {};
