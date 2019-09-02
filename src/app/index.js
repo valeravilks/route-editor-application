@@ -35,10 +35,6 @@ class App extends React.Component {
         }
     }
 
-    removeItem = (value) => {
-        this.props.stores.maps.pointerRemove(value);
-    };
-
     center = () => {
         if(this.props.stores.maps.pointer.length !== 0){
             return this.props.stores.maps.pointer[this.props.stores.maps.pointer.length - 1]['point']
@@ -66,7 +62,6 @@ class App extends React.Component {
         });
         return (
             <div className="container m-5">
-                <Dnd/>
                 <div className="row">
                     <div className="col-12">
                         <input
@@ -77,10 +72,7 @@ class App extends React.Component {
                                ref={this.input}
                                onKeyUp={this.pressKey}
                         />
-                        <ul>
-                                {renderPoint}
-                        </ul>
-
+                        <Dnd/>
                     </div>
                     <div className="col-12 h123">
                         <YMaps query={{ load: "package.full" }}>
