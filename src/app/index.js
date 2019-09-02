@@ -47,6 +47,25 @@ class App extends React.Component {
         return this.props.stores.maps.pointer.map(el => el['point'])
     }
 
+    placeMarkEvent = (ref) => {
+        console.log('Вот так вот');
+        if(ref){
+            ref.events.add('dragend', res => {
+                let position = res.originalEvent.target.geometry._coordinates;
+                this.props.stores.api.geoDeCode.points(position[1], position[0]).then(require => {
+                    let name = require.response.GeoObjectCollection.featureMember[0].GeoObject.description;
+                    console.log(name);
+                    console.log(this.props.stores.maps.pointer);
+                    // this.props.stores.maps.pointerPush(name);
+                })
+            });
+            ref.events.add('dragstart', res => {
+                console.log('dragstart');
+            })
+            //console.log(ref.events);
+        }
+    }
+
     render() {
         let renderPoint = this.props.stores.maps.pointer.map((point, index) => {
             return <li key={index}>
@@ -58,7 +77,12 @@ class App extends React.Component {
         });
 
         let plaseMark = this.props.stores.maps.pointer.map((point, index) => {
-            return  <Placemark key={index} geometry={point['point']} options={{draggable: true}} />
+            return  <Placemark key={index}
+                               geometry={point['point']}
+                               options={{draggable: true}}
+                               instanceRef={ref => this.placeMarkEvent(ref)}
+
+            />
         });
         return (
             <div className="container m-5">

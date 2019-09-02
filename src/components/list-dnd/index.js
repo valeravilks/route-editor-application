@@ -27,7 +27,10 @@ const SortableList = SortableContainer(({items, removeItem}) => {
 });
 class SortableComponent extends Component {
      onSortEnd = ({oldIndex, newIndex}) => {
-        this.props.stores.maps.pointerSort(oldIndex, newIndex);
+
+         if(oldIndex !== newIndex){
+             this.props.stores.maps.pointerSort(oldIndex, newIndex);
+         }
     };
 
     removeItem = (value) => {
