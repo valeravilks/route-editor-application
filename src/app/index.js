@@ -1,6 +1,6 @@
 import React from "react";
 import withStore from '~/hocs/withStore';
-import Dnd from '~c/dnd';
+import Dnd from '~c/list-dnd';
 
 import { YMaps, Map, GeoObject, Placemark, Polyline } from 'react-yandex-maps';
 import { Button } from 'react-bootstrap';
@@ -58,7 +58,7 @@ class App extends React.Component {
         });
 
         let plaseMark = this.props.stores.maps.pointer.map((point, index) => {
-            return  <Placemark key={index} geometry={point['point']} />
+            return  <Placemark key={index} geometry={point['point']} options={{draggable: true}} />
         });
         return (
             <div className="container m-5">
