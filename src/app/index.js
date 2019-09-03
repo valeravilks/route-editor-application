@@ -8,6 +8,7 @@ import { Button } from 'react-bootstrap';
 class App extends React.Component {
 
     input = React.createRef();
+    ref = [];
 
     onSaggest = ymaps => {
         this.ymaps = ymaps;
@@ -22,7 +23,29 @@ class App extends React.Component {
             this.input.current.value = '';
             this.props.stores.maps.pointerPush(name);
         });
+
+        // var placemark = new ymaps.Placemark([55.75, 37.61], {
+        //     balloonContent: '&lt;img src="http://img-fotki.yandex.ru/get/6114/82599242.2d6/0_88b97_ec425cf5_M" /&gt;',
+        //     iconContent: "Azerbaijan"
+        // }, {
+        //     preset: "islands#yellowStretchyIcon",
+        //     // Disabling the close balloon button.
+        //     balloonCloseButton: false,
+        //     // The balloon will open and close when the placemark icon is clicked.
+        //     hideIconOnBalloonOpen: false,
+        //     draggable: true
+        // });
+        // this.map.geoObjects.add(placemark);
+        // placemark.events.add('click', function(){
+        //     console.log('Клик');
+        // })
+
+
+
+
     };
+
+
 
     pressKey = (e) => {
         if(e.keyCode === 13){
@@ -47,22 +70,26 @@ class App extends React.Component {
         return this.props.stores.maps.pointer.map(el => el['point'])
     }
 
-    placeMarkEvent = (ref) => {
-        console.log('Вот так вот');
-        if(ref){
-            ref.events.add('dragend', res => {
-                let position = res.originalEvent.target.geometry._coordinates;
-                this.props.stores.api.geoDeCode.points(position[1], position[0]).then(require => {
-                    let name = require.response.GeoObjectCollection.featureMember[0].GeoObject.description;
-                    console.log(name);
-                    console.log(this.props.stores.maps.pointer);
-                    // this.props.stores.maps.pointerPush(name);
-                })
-            });
-            ref.events.add('dragstart', res => {
-                console.log('dragstart');
+    // placeMarkEvent = (ref, index) => {
+    //     if(ref){
+    //         ref.events.add('dragend', (rez) => {
+    //             console.log('drag' + index);
+    //         })
+    //     }
+    //
+    // }
+
+    end = (index) => {
+
+        if(this.refs){
+            this.refs.events.add('dragend', (rez) => {
+                console.log('drag' + index);
             })
-            //console.log(ref.events);
+
+            this.refs.events.add('dblclick', (rez) => {
+                console.log('dblclick');
+            })
+
         }
     }
 
@@ -77,11 +104,14 @@ class App extends React.Component {
         });
 
         let plaseMark = this.props.stores.maps.pointer.map((point, index) => {
+            console.log(index);
             return  <Placemark key={index}
                                geometry={point['point']}
                                options={{draggable: true}}
-                               instanceRef={ref => this.placeMarkEvent(ref)}
-
+                               properties={{hintContent: "Москва - Берлин"}}
+                               // instanceRef={ref => this.end(ref, index)}
+                               instanceRef={ref => this.refs = ref}
+                               onLoad={(e) => this.end(index)}
             />
         });
         return (
@@ -107,7 +137,8 @@ class App extends React.Component {
                                     controls: []
                                 }}
                                 onLoad={this.onSaggest}
-
+                                instanceRef={map => this.map = map}
+                                // instanceRef={ref => this.placeMarkEvent(ref)}
                             >
                                 {plaseMark}
                                 <Polyline
