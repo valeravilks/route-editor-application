@@ -20,6 +20,12 @@ export default class{
         }
     }
 
+    @action pointerUpdate(name, point, index){
+        this.pointer[index] = {
+            name, point
+        };
+    }
+
     @action pointerRemove(value){
         this.pointer.splice(value, 1);
     }

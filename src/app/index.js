@@ -80,14 +80,20 @@ class App extends React.Component {
     // }
 
     end = (index) => {
-
         if(this.refs){
-            this.refs.events.add('dragend', (rez) => {
-                console.log('drag' + index);
-            })
+            this.refs.events.add('dragend', res => {
+                let point = res.originalEvent.target.geometry._coordinates;
+                this.props.stores.api.geoDeCode.points(point[1], point[0])
+                    .then(rez => {
+                        let points_s = rez.response.GeoObjectCollection.featureMember[0].GeoObject;
+                        let p = points_s.Point.pos;
+                        console.log(points_s);
+                        let mass = p.split(' ');
+                        let name_s = points_s.description;
+                        this.props.stores.maps.pointerUpdate(name_s, [mass[1], mass[0]], index);
+                    })
 
-            this.refs.events.add('dblclick', (rez) => {
-                console.log('dblclick');
+
             })
 
         }
