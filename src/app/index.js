@@ -86,15 +86,25 @@ class App extends React.Component {
                 this.props.stores.api.geoDeCode.points(point[1], point[0])
                     .then(rez => {
                         let points_s = rez.response.GeoObjectCollection.featureMember[0].GeoObject;
-                        let p = points_s.Point.pos;
-                        console.log(points_s);
+                        // let p = points_s.Point.pos;
+                        let p = rez.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.Point.pos;
                         let mass = p.split(' ');
                         let name_s = points_s.description;
                         this.props.stores.maps.pointerUpdate(name_s, [mass[1], mass[0]], index);
                     })
+            });
 
-
-            })
+            this.refs.events.add('balloonopen', res => {
+                this.refs.properties.set('balloonContent', "Идет загрузка данных...");
+                let point = this.refs.geometry.getCoordinates();
+                // console.log(point);
+                this.props.stores.api.geoDeCode.points(point[1], point[0])
+                    .then(rez => {
+                        let points_s = rez.response.GeoObjectCollection.featureMember[0].GeoObject;
+                        let name_s = points_s.description;
+                        this.refs.properties.set('balloonContent', name_s);
+                    })
+            });
 
         }
     }
@@ -110,11 +120,11 @@ class App extends React.Component {
         });
 
         let plaseMark = this.props.stores.maps.pointer.map((point, index) => {
-            console.log(index);
+            // console.log(index);
             return  <Placemark key={index}
                                geometry={point['point']}
-                               options={{draggable: true}}
-                               properties={{hintContent: "Москва - Берлин"}}
+                               options={{draggable: true, openEmptyBalloon: true, balloonPanelMaxMapArea: 0}}
+                               // properties={{hintContent: "Москва - Берлин"}}
                                // instanceRef={ref => this.end(ref, index)}
                                instanceRef={ref => this.refs = ref}
                                onLoad={(e) => this.end(index)}
