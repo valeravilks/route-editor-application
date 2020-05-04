@@ -1,5 +1,7 @@
 # Route Editor application
 
+![](route-map.gif)
+
 This application allows you to interactively create a route on the map, indicating the start, end and intermediate points of movement.
 
 The application was implemented using React. ModX is connected to store state.
